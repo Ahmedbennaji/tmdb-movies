@@ -25,7 +25,7 @@ and sort the results, and shows them in a responsive grid of poster cards.
   ```bash
   nvm use
   ```
-- A free **TMDB API key** (v3 auth) — https://www.themoviedb.org/settings/api
+
 
 ## Setup & run
 
@@ -53,10 +53,6 @@ Then open the URL Vite prints (default http://localhost:5173).
 | --- | --- |
 | `npm start` / `npm run dev` | Start the Vite dev server |
 
-
-```bash
-npm test
-```
 
 ## Project structure
 
