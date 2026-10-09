@@ -3,6 +3,7 @@
 A small movie-discovery app built with **Vite · React 19 · TypeScript · Tailwind v4 · shadcn/ui**.
 It fetches films from TMDB's `/discover/movie` endpoint, lets you filter by genre
 and sort the results, and shows them in a responsive grid of poster cards.
+<img width="1512" height="734" alt="Screenshot 2026-10-09 at 10 15 37 AM" src="https://github.com/user-attachments/assets/2edc1f06-a605-4aba-9863-9106c8534f8f" />
 
 ## Features
 
