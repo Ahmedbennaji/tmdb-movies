@@ -1,75 +1,83 @@
-# React + TypeScript + Vite
+# TMDB Movie Discovery
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A small movie-discovery app built with **Vite · React 19 · TypeScript · Tailwind v4 · shadcn/ui**.
+It fetches films from TMDB's `/discover/movie` endpoint, lets you filter by genre
+and sort the results, and shows them in a responsive grid of poster cards.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- Fetches the first page of `/discover/movie`.
+- **Genre filter** applied at the API (`with_genres`).
+- **Client-side sorting** by popularity, rating, release date, or title.
+- Responsive card grid (2 → 6 columns as the viewport grows).
+- Each card: poster, title, release year, rating badge, and a hover effect
+  (lift + poster zoom + overview reveal, all via CSS transitions).
+- Loading skeletons, a friendly error state with retry, and an empty state.
+- API responses validated at the boundary with **Zod**.
 
-## React Compiler
+## Prerequisites
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- **Node 24.16.0** (pinned in `.nvmrc`). If you use `nvm`:
+  ```bash
+  nvm use
+  ```
+- A free **TMDB API key** (v3 auth) — https://www.themoviedb.org/settings/api
 
-## Expanding the ESLint configuration
+## Setup & run
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+```bash
+# 1. Install dependencies
+npm install
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+# 2. Create your local env file and add your TMDB key
+cp .env.example .env
+# then edit .env and set VITE_TMDB_API_KEY=your_key_here
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-
+# 3. Start the dev server
+npm start
 ```
 
-You can also install [eslint-plugin-react-x](https://npmx.dev/package/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://npmx.dev/package/eslint-plugin-react-dom) for React-specific lint rules:
+Then open the URL Vite prints (default http://localhost:5173).
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+> The `VITE_` prefix on `VITE_TMDB_API_KEY` is required — Vite only exposes
+> env vars with that prefix to the browser. `.env` is gitignored and never
+> committed.
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## Scripts
+
+| Script | Description |
+| --- | --- |
+| `npm start` / `npm run dev` | Start the Vite dev server |
+| `npm run build` | Type-check and build for production |
+| `npm run preview` | Preview the production build |
+| `npm test` | Run the unit tests once (Vitest) |
+| `npm run test:watch` | Run tests in watch mode |
+| `npm run lint` | Lint the project |
+
+## Testing
+
+Unit tests (Vitest + Testing Library) cover the pure logic that's worth
+protecting: the `sortMovies` function and the Zod response schemas.
+
+```bash
+npm test
+```
+
+## Project structure
 
 ```
+src/
+  api/        TMDB client (tmdb.ts) + Zod schemas/types (types.ts)
+  hooks/      useMovies, useGenres — data fetching + loading/error state
+  lib/        sortMovies — pure, tested sort logic
+  components/ MovieCard, MovieGrid, Controls + shadcn ui/ primitives
+  App.tsx     Composes state, controls, and the grid
+```
+
+## Notes
+
+- `npm audit` reports advisories from the **`shadcn` CLI**'s build tooling
+  (`ts-morph`, `fast-glob`). `shadcn` is a `devDependency` and its CSS is inlined
+  at build time, so none of that tooling ships in the browser bundle.
+- The app reads the TMDB key only from `.env` (gitignored, never committed).
+  Rotate the key if it was ever shared outside your machine.
