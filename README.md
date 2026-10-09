@@ -48,16 +48,7 @@ Then open the URL Vite prints (default http://localhost:5173).
 | Script | Description |
 | --- | --- |
 | `npm start` / `npm run dev` | Start the Vite dev server |
-| `npm run build` | Type-check and build for production |
-| `npm run preview` | Preview the production build |
-| `npm test` | Run the unit tests once (Vitest) |
-| `npm run test:watch` | Run tests in watch mode |
-| `npm run lint` | Lint the project |
 
-## Testing
-
-Unit tests (Vitest + Testing Library) cover the pure logic that's worth
-protecting: the `sortMovies` function and the Zod response schemas.
 
 ```bash
 npm test
@@ -74,10 +65,3 @@ src/
   App.tsx     Composes state, controls, and the grid
 ```
 
-## Notes
-
-- `npm audit` reports advisories from the **`shadcn` CLI**'s build tooling
-  (`ts-morph`, `fast-glob`). `shadcn` is a `devDependency` and its CSS is inlined
-  at build time, so none of that tooling ships in the browser bundle.
-- The app reads the TMDB key only from `.env` (gitignored, never committed).
-  Rotate the key if it was ever shared outside your machine.
